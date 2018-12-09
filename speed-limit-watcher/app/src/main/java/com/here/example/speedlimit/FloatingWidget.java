@@ -1,12 +1,17 @@
 package com.here.example.speedlimit;
 
+import android.app.Activity;
+import android.app.Service;
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.content.Intent;
+import android.graphics.PixelFormat;
+import android.os.IBinder;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -15,13 +20,12 @@ import com.here.android.mpa.common.GeoPosition;
 import com.here.android.mpa.common.MapEngine;
 import com.here.android.mpa.common.MatchedGeoPosition;
 import com.here.android.mpa.common.PositioningManager;
-import com.here.android.mpa.common.RoadElement;
 import com.here.android.mpa.prefetcher.MapDataPrefetcher;
 
 import java.lang.ref.WeakReference;
 
 
-public class SpeedLimitFragment extends Fragment {
+public class FloatingWidget extends Service {
 
     private LinearLayout currentSpeedContainerView;
     private TextView currentSpeedView;
@@ -29,43 +33,111 @@ public class SpeedLimitFragment extends Fragment {
 
     private boolean fetchingDataInProgress = false;
 
-    public SpeedLimitFragment() {
-        // Required empty public constructor
+    private WindowManager mWindowManager;
+    private View mFloatingWidget;
+
+    public FloatingWidget() {
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mFloatingWidget = LayoutInflater.from(this).inflate(R.layout.floating_widget, null);
+
+        final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_PHONE,
+                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT);
+
+        params.gravity = Gravity.TOP | Gravity.START;
+        params.x = 0;
+        params.y = 100;
+
+        mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+        mWindowManager.addView(mFloatingWidget, params);
+
+        final View collapsedView = mFloatingWidget.findViewById(R.id.collapse_view);
+        final View expandedView = mFloatingWidget.findViewById(R.id.expanded_container);
+
+        Button closeButtonCollapsed = (Button) mFloatingWidget.findViewById(R.id.close_btn);
+        closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopSelf();
+            }
+        });
+
+        Button closeButton = (Button) mFloatingWidget.findViewById(R.id.close_button);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                collapsedView.setVisibility(View.VISIBLE);
+                expandedView.setVisibility(View.GONE);
+            }
+        });
+
+        mFloatingWidget.findViewById(R.id.root_container).setOnTouchListener(new View.OnTouchListener() {
+            private int initialX;
+            private int initialY;
+            private float initialTouchX;
+            private float initialTouchY;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        initialX = params.x;
+                        initialY = params.y;
+                        initialTouchX = event.getRawX();
+                        initialTouchY = event.getRawY();
+                        return true;
+                    case MotionEvent.ACTION_UP:
+                        int xDiff = (int) (event.getRawX() - initialTouchX);
+                        int yDiff = (int) (event.getRawY() - initialTouchY);
+                        if (xDiff < 10 && yDiff < 10) {
+                            if (isViewCollapsed()) {
+                                collapsedView.setVisibility(View.GONE);
+                                expandedView.setVisibility(View.VISIBLE);
+                            }
+                        }
+                        return true;
+                    case MotionEvent.ACTION_MOVE:
+                        params.x = initialX + (int) (event.getRawX() - initialTouchX);
+                        params.y = initialY + (int) (event.getRawY() - initialTouchY);
+                        mWindowManager.updateViewLayout(mFloatingWidget, params);
+                        return true;
+                }
+                return false;
+            }
+        });
+
+        setElements(mFloatingWidget);
+        startWatching();
+    }
+
+    private boolean isViewCollapsed() {
+        return mFloatingWidget == null || mFloatingWidget.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
     }
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
+        if (mFloatingWidget != null) {
+            mWindowManager.removeView(mFloatingWidget);
+        }
         if (MapEngine.isInitialized()) {
             PositioningManager.getInstance().removeListener(positionLister);
         }
-        super.onDestroy();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        startWatching();
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_speed_limit, container, false);
-
-        setElements(fragmentView);
-        return fragmentView;
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
+    //fragment responsibility
+    
     private int meterPerSecToKmPerHour (double speed) {
         return (int) (speed * 3.6);
     }

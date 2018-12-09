@@ -8,4 +8,6 @@
     <string name="navigation_speed_label_m">m/h</string>
 
     <string name="navigation_speed_limit_default">N/A</string>
+
+    <string name="widget_close_button">X</string>
 </resources>
