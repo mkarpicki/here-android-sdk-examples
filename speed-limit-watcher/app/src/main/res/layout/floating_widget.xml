@@ -62,6 +62,7 @@
                     android:layout_width="45dp"
                     android:layout_height="50dp"
                     android:textAlignment="center"
+                    android:textColor="@color/speedUnderLimitText"
                     android:gravity="center_vertical"
                     android:id="@+id/currentSpeed"
                     android:text=""

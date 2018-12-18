@@ -164,14 +164,18 @@ public class FloatingWidget extends Service {
 
     private void updateCurrentSpeedView(int currentSpeed, int currentSpeedLimit) {
 
-        int color;
+        int backgroundColor;
+        int textColor;
         if (currentSpeed > currentSpeedLimit && currentSpeedLimit > 0) {
-            color = getResources().getColor(R.color.notAllowedSpeedBackground);
+            backgroundColor = R.color.notAllowedSpeedBackground;
+            textColor = R.color.speedOverLimitText;
         } else {
-            color = getResources().getColor(R.color.allowedSpeedBackground);
+            backgroundColor = R.color.allowedSpeedBackground;
+            textColor = R.color.speedUnderLimitText;
         }
-        currentSpeedContainerView.setBackgroundColor(color);
+        currentSpeedContainerView.setBackgroundColor(getResources().getColor(backgroundColor));
         currentSpeedView.setText(String.valueOf(currentSpeed));
+        currentSpeedView.setTextColor(getResources().getColor(textColor));
     }
 
     private void updateCurrentSpeedLimitView(int currentSpeedLimit) {
