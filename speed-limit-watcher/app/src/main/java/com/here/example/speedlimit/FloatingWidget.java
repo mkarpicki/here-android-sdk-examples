@@ -62,24 +62,12 @@ public class FloatingWidget extends Service {
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         mWindowManager.addView(mFloatingWidget, params);
-
-        final View collapsedView = mFloatingWidget.findViewById(R.id.collapse_view);
-        final View expandedView = mFloatingWidget.findViewById(R.id.expanded_container);
-
-        Button closeButtonCollapsed = (Button) mFloatingWidget.findViewById(R.id.close_btn);
-        closeButtonCollapsed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                stopSelf();
-            }
-        });
-
+        
         Button closeButton = (Button) mFloatingWidget.findViewById(R.id.close_button);
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                collapsedView.setVisibility(View.VISIBLE);
-                expandedView.setVisibility(View.GONE);
+                stopSelf();
             }
         });
 
@@ -98,14 +86,6 @@ public class FloatingWidget extends Service {
                         initialTouchY = event.getRawY();
                         return true;
                     case MotionEvent.ACTION_UP:
-                        int xDiff = (int) (event.getRawX() - initialTouchX);
-                        int yDiff = (int) (event.getRawY() - initialTouchY);
-                        if (xDiff < 10 && yDiff < 10) {
-                            if (isViewCollapsed()) {
-                                collapsedView.setVisibility(View.GONE);
-                                expandedView.setVisibility(View.VISIBLE);
-                            }
-                        }
                         return true;
                     case MotionEvent.ACTION_MOVE:
                         params.x = initialX + (int) (event.getRawX() - initialTouchX);
@@ -119,10 +99,6 @@ public class FloatingWidget extends Service {
 
         setElements(mFloatingWidget);
         startWatching();
-    }
-
-    private boolean isViewCollapsed() {
-        return mFloatingWidget == null || mFloatingWidget.findViewById(R.id.collapse_view).getVisibility() == View.VISIBLE;
     }
 
     @Override

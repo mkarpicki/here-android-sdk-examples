@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:keepScreenOn="true"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <RelativeLayout
@@ -8,22 +9,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
-        <RelativeLayout
-            android:id="@+id/collapse_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <Button
-                android:id="@+id/close_btn"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginLeft="50dp"
-                android:text="@string/widget_close_button"
-                tools:ignore="ContentDescription"/>
-        </RelativeLayout>
 
         <LinearLayout
             android:visibility="visible"
