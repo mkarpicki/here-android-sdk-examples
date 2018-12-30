@@ -1,5 +1,6 @@
 package com.here.example.speedlimit;
 
+import android.os.Build;
 import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
@@ -49,10 +50,17 @@ public class FloatingWidget extends Service {
         super.onCreate();
         mFloatingWidget = LayoutInflater.from(this).inflate(R.layout.floating_widget, null);
 
+        int layout_param;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            layout_param = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            layout_param = WindowManager.LayoutParams.TYPE_PHONE;
+        }
+
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_PHONE,
+                layout_param,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT);
 

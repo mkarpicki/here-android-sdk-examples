@@ -18,13 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--<meta-data android:name="com.here.android.maps.appid" android:value="{SAMPLE_APP_ID}"/>-->
-        <!--<meta-data android:name="com.here.android.maps.apptoken" android:value="{SAMPLE_APP_CODE}"/>-->
-        <!--<meta-data android:name="com.here.android.maps.license.key" android:value="{SAMPLE_LICENSE}"/>-->
-
-        <meta-data android:name="com.here.android.maps.appid" android:value="aAEVw0fy8ysfrLQ7GTxH"/>
-        <meta-data android:name="com.here.android.maps.apptoken" android:value="2H5W2BT49ELk-DL3ZFtYlQ"/>
-        <meta-data android:name="com.here.android.maps.license.key" android:value="GXvsZ7oZHVdw9fpL56ddp9nMnccmASpp2Qfv3h32kNfTHG+Z0Hi3MaVJYS6gNnNJfoR7IqQxalsHABcrgft/mDgG6VGijNs6SQ/MkCJY2qa6TV0E4COKPrKUoJSOcnx4A5q4/MOSXQuOEjjpdEoFf1IAcyi3aOKNibnaLnvYlCdZo4a7sUmo9NHP3BLhXLHWJHRuR4YqFA840rS2PFjzTIq9RtGNB0FTLTCo3/4TExnUwutgAhrWtYkvhbG1lNrFKJu5z3txv6jcsilsdAv5GzZTC313LrcPf5z120+ukahWW23EHSgeVJefSHl+wOVSe7Fz7nhnRxYjzWSZn07QHdwOZFFdp0lFeey6DP9iKRjvUMYdXEYFeZYPxWKyTqnztE/cIxGFRqOkiUf/KHzQSVnHC18GeBKUK3PCtT9WgcGP2LDGGSKx2HfDUHSKHqlj2HxJ9ClGyJbwZiro9uijWKwDgNiKrritk0DIKNM0EEJJDpXgd8ixWJ4odH0seWn3qZengzPXdQJ6cxiEBKt8Vbuw85H1mnismENhadwy1K2NCTsL1r5u2/3KElolCOh1EGO4NoH+Oxj2LpKKguxkRhjNhtzOUP00LIBZfPIgyMp6NC6JgqeQuBAKqZmHnsjaArqGU8QUIx9OuhDXtaprBBjuObXlG0z0+oVe2pBby8k="/>
+        <meta-data android:name="com.here.android.maps.appid" android:value="{SAMPLE_APP_ID}"/>
+        <meta-data android:name="com.here.android.maps.apptoken" android:value="{SAMPLE_APP_CODE}"/>
+        <meta-data android:name="com.here.android.maps.license.key" android:value="{SAMPLE_LICENSE}"/>
 
         <service
             android:name="com.here.android.mpa.service.MapService"
